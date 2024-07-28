@@ -24,7 +24,12 @@ const UserHeader = () => {
                 </Text>
                 <Flex gap={2} alignItems={"center"}>
                     <Text fontSize={"sm"}>markzuckerberg</Text>
-                    <Text fontSize={"xsm"}
+                    <Text fontSize={"xs"}
+                    // {
+                    //     base: "xs",
+                    //     md: "sm",
+                    //     lg: "md",
+                    // }
                         bg={"gray.dark"} color={"gray.light"}
                         p={1} borderRadius={"full"}>threads.net</Text>
                 </Flex>
@@ -33,7 +38,12 @@ const UserHeader = () => {
                 <Avatar
                     name="Mark Zuckerberg"
                     src="/zuck-avatar.png"
-                    size={"xl"}
+                    size={
+                        {
+                            base: "md",
+                            md: "xl",
+                        }
+                    }
                 />
             </Box>
         </Flex>
