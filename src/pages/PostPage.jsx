@@ -1,7 +1,8 @@
-import { Avatar, Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Divider, Flex, Image, Text } from "@chakra-ui/react";
 import { BsThreeDots } from "react-icons/bs";
 import Actions from "../components/Actions";
 import { useState } from "react";
+import Comment from "../components/Comments";
 
 const PostPage = () => {
   const [liked, setLiked] = useState(false);
@@ -38,7 +39,22 @@ const PostPage = () => {
         {200 + (liked ? 1: 0)} likes
       </Text>
     </Flex>
+    <Divider my={4} />
+    <Flex justifyContent={"space-between"}>
+      <Flex gap={2} alignItems={"center"}>
+        <Text fontSize={"2xl"}>👋</Text>
+        <Text color={"gray.light"}>Get the app to post, like and reply</Text>
+      </Flex>
+        <Button>Get</Button>
+    </Flex>
+    <Divider my={4} />
+    <Comment comment="looks really good!" createdAt="2d"
+    likes={100} username="johndoe" userAvatar="https://bit.ly/dan-abramov" />
+    <Comment comment="looks good!" createdAt="1d"
+    likes={100} username="janedoe" userAvatar="https://bit.ly/code-beast" />
+    <Comment comment="Amazing!" createdAt="12d"
+    likes={100} username="sallydoe" userAvatar="https://bit.ly/sage-adebayo" />
   </>
 };
 
-export default PostPage
+export default PostPage;
