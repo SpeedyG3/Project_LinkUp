@@ -16,7 +16,7 @@ const signupUser = async (req, res) => {
             name, 
             email, 
             username, 
-            hashedPassword
+            password: hashedPassword
         });
         await newUser.save();
 
@@ -32,7 +32,7 @@ const signupUser = async (req, res) => {
         }
     }catch(err){
         res.status(500).json({message: err.message});
-        console.log("Error in signupUser", message);
+        console.log("Error in signupUser", err.message);
     }
 };
 
