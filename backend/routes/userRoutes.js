@@ -1,8 +1,12 @@
 import express from "express";
-import {signupUser} from '../controllers/userController.js';
+import {signupUser, loginUser, logoutUser, followUnfollowUser} from '../controllers/userController.js';
+import protectRoute from "../middlewares/protectRoute.js";
 
 const router = express.Router();
 
 router.post("/signup", signupUser);
+router.post("/login", loginUser);
+router.post("/logout", logoutUser);
 
-export default router;
+router.post("/follow/:id", protectRoute, followUnfollowUser); //unfollow included too
+export default router; 
