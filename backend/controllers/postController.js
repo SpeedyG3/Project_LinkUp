@@ -64,4 +64,73 @@ const deletePost = async(req, res) => {
         res.status(500).json({message: err.message});
     }
 }
-export {createPost, getPost, deletePost};
+
+const likeUnlikePost = async(req, res) => {
+    try{
+        const {postId} = req.params;
+        const userId = req.user._id;
+
+        const post = await Post.findById(postId);
+        if(!post){
+            res.status(404).json({message: "Post not found"});
+        }
+
+        const userLikedPost = post.likes.includes(userId);
+        if(userLikedPost){ //unlike
+            await Post.updateOne({_id: postId}, {$pull: {likes: userId}});
+            res.status(200).json({message: "Post unliked successfully"})
+        }else{
+            post.likes.push(userId);
+            await post.save();
+            res.status(200).json({message: "Post liked successfully"})
+        }
+    }catch(err){
+        res.status(500).json({message: err.message});
+    }
+}
+
+const replyPost = async(req, res) => {
+    try{
+        const {text} = req.body;
+        const postId = req.params.postId;
+        const userId = req.user._id;
+        const userProfilePic = req.user.userProfilePic;
+        const username = req.user.username;
+
+        if(!text){
+            return res.status(400).json({message: "Text field is required"});
+        }
+
+        const post = await Post.findById(postId);
+        if(!post){
+            return res.status(404).json({message: "Post not found"});
+        }
+
+        const reply = {userId, text, userProfilePic, username};
+        post.replies.push(reply);
+        await post.save();
+        res.status(200).json({message: "Reply added!", post});
+
+    }catch(err){
+        res.status(500).json({message: err.message});
+    }
+}
+
+const getFeedPosts = async(req, res) => {
+    try{
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(404).json({message: "User not found"});
+        }
+
+        const following = user.following;
+        const feedPosts = await Post.find({postedBy: {$in: following}}).sort({createdAt: 1});
+        res.status(200).json({feedPosts});
+        
+    }catch(err){
+        res.status(500).json({message: err.message});
+    }
+}
+
+export {createPost, getPost, deletePost, likeUnlikePost, replyPost, getFeedPosts};
