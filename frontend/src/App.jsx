@@ -25,6 +25,7 @@ function App() {
       </Routes>
 
       {user && <LogoutButton/>}
+      {user && <CreatePost/>}
     </Container>
     </>
   );

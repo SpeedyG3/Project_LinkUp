@@ -160,7 +160,10 @@ const updateUser = async(req, res) => {
         user.bio = bio || user.bio;
 
         user = await user.save();
-        res.status(200).json({message: "Profile updated successfully"});
+        //password response is null 
+        user.password = null;
+        
+        res.status(200).json(user);
 
     }catch(err){
         res.status(500).json({error: err.message});

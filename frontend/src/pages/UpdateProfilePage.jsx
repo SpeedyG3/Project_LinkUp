@@ -26,13 +26,15 @@ export default function UpdateProfilePage() {
 		password: "",
 	});
 	const fileRef = useRef(null);
+	const [updating, setUpdating] = useState(false);
 
 	const toast = useShowToast();
 
 	const { handleImageChange, imgUrl } = usePreviewImg();
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
+		if(updating) return;
+		setUpdating(true);
 		try {
 			const res = await fetch(`/api/users/update/${user._id}`, {
 				method: "PUT",
@@ -44,12 +46,15 @@ export default function UpdateProfilePage() {
 			const data = await res.json(); // updated user object
 			if (data.error) {
 				toast("Error", data.error, "error");
+				return;
 			}
 			toast("Success", "Profile updated successfully", "success");
 			setUser(data);
 			localStorage.setItem("user-threads", JSON.stringify(data));
 		} catch (error) {
 			toast("Error", error, "error");
+		}finally{
+			setUpdating(false);
 		}
 	};
 	return (
@@ -149,7 +154,7 @@ export default function UpdateProfilePage() {
 								bg: "green.500",
 							}}
 							type='submit'
-						>
+							isLoading={updating}>
 							Submit
 						</Button>
 					</Stack>
