@@ -3,6 +3,7 @@ import React from 'react'
 import { useSetRecoilState } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import useShowToast from '../hooks/useShowToast'
+import { FiLogOut } from "react-icons/fi";
 
 const LogoutButton = () => {
     const setUser = useSetRecoilState(userAtom);
@@ -17,7 +18,7 @@ const LogoutButton = () => {
                 },
             })
             const data = await res.json();
-            console.log(data);
+            // console.log(data);
             if(data.error){
                 toast("Error", data.error, "error");
                 return;
@@ -25,14 +26,15 @@ const LogoutButton = () => {
             localStorage.removeItem("user-threads");
             setUser(null);
         }catch(error){
-            console.log(error);
+            // console.log(error);
+            toast("Error", error, "error");
         }
     }
   return (
     <Button position="fixed" 
     top="30px" right="30px" size="sm"
     onClick={handleLogout}>
-        Logout
+        <FiLogOut size={20}/>
     </Button>
   )
 }

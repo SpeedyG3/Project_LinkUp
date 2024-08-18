@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Flex,
   Box,
@@ -22,7 +20,7 @@ import authScreenAtom from '../atoms/authAtom'
 import useShowToast from '../hooks/useShowToast'
 import userAtom from '../atoms/userAtom'
 
-export default function SignupCard() {
+export default function LoginCard() {
   const [showPassword, setShowPassword] = useState(false)
   const setAuthScreen = useSetRecoilState(authScreenAtom);
   const setUser = useSetRecoilState(userAtom);
@@ -42,16 +40,16 @@ export default function SignupCard() {
         body: JSON.stringify(inputs),
       });
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       if(data.error){
         toast("Error", data.error, "error");
         return;
       }
 
-      console.log(data);
+      // console.log(data);
       localStorage.setItem("user-threads", JSON.stringify(data));
       setUser(data);
-      console.log(inputs);
+      // console.log(inputs);
     }catch(error){
       toast("Error", error, "error");
     }

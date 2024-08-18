@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Flex,
   Box,
@@ -55,7 +53,7 @@ export default function SignupCard() {
       setUser(data);
       // console.log(data);
     }catch(error){
-      toast("Erro", error, "error");
+      toast("Error", error, "error");
     }
   };
 
