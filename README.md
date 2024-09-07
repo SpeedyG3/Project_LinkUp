@@ -35,7 +35,6 @@ This is a full-featured social media application built using the MERN stack, Cha
 Clone the repository:
    ```
    git clone https://github.com/SpeedyG3/Project_LinkUp.git
-   cd social-media-app
 ```
 
 Setup .env File:
