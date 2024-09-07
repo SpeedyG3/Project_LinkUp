@@ -4,7 +4,6 @@ This is a full-featured social media application built using the MERN stack, Cha
 
 ## 🌟 Features
 
-- **Tech Stack**: MERN (MongoDB, Express.js, React.js, Node.js) + Socket.io + Chakra UI
 - **Authentication & Authorization**: Secured with JWT (JSON Web Token)
 - **Posts**:
   - 📝 Create Post
