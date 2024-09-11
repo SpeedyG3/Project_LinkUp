@@ -11,7 +11,7 @@ import useShowToast from "../hooks/useShowToast";
 const UserHeader = ({ user }) => { // profile being looked at
     const showToast = useShowToast();
     const currentUser = useRecoilValue(userAtom); // logged in user
-    const [following, setFollowing] = useState(user.followers.includes(currentUser._id));
+    const [following, setFollowing] = useState(user.followers.includes(currentUser?._id));
     const [updating, setUpdating] = useState(false);
 
     const copyUrl = () => {
@@ -42,11 +42,11 @@ const UserHeader = ({ user }) => { // profile being looked at
             }
             if (following) {
                 showToast("Success", `Unfollowed ${user.name}`, "success");
-                const updatedFollowers = user.followers.filter(follower => follower !== currentUser._id);
+                const updatedFollowers = user.followers.filter(follower => follower !== currentUser?._id); //remove ? only on this line..may cause issue as i have done it
                 user.followers = updatedFollowers;
             } else {
                 showToast("Success", `Followed ${user.name}`, "success");
-                user.followers.push(currentUser._id);
+                user.followers.push(currentUser?._id);
             }
             setFollowing(!following);
         } catch (err) {
@@ -80,12 +80,12 @@ const UserHeader = ({ user }) => { // profile being looked at
                 </Box>
             </Flex>
             <Text>{user.bio}</Text>
-            {currentUser._id === user._id && (
+            {currentUser?._id === user._id && (
                 <Link as={RouterLink} to='/update'>
                     <Button size={"sm"}>Update Profile</Button>
                 </Link>
             )}
-            {currentUser._id !== user._id && (
+            {currentUser?._id !== user._id && (
                 <Button size={"sm"} onClick={handleFollowUnfollow} isLoading={updating}>
                     {following ? "Unfollow" : "Follow"}
                 </Button>

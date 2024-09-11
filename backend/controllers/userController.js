@@ -2,11 +2,22 @@ import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
 import generateTokenAndSetCookie from "../utils/helpers/genTokenAndSetCookie.js";
 import {v2 as cloudinary} from "cloudinary";
+import mongoose from "mongoose";
+import Post from "../models/postModel.js";
 
 const getUserProfile = async (req, res) => {
-    const {username} = req.params;
+    const {query} = req.params;
+    //fetching user profile with either username or userid
+    //query is either username or userid
+
     try{
-        const user = await User.findOne({username}).select("-password").select("-updatedAt");
+        let user;
+        //if query is userID
+        if(mongoose.Types.ObjectId.isValid(query)){
+            user = await User.findOne({_id: query}).select("-password").select("-updatedAt");
+        }else{
+            user = await User.findOne({username: query}).select("-password").select("-updatedAt");
+        }
         if(!user){
             return res.status(400).json({error: "User not found"});
         }
@@ -171,4 +182,20 @@ const updateUser = async(req, res) => {
     }
 };
 
-export {signupUser, loginUser, logoutUser, followUnfollowUser, updateUser, getUserProfile};
+const getUserPosts = async(req, res) => {
+    const {username} = req.params;
+    try{
+        const user = await User.findOne({username});
+        if(!user){
+            return res.status(400).json({error: "User not found"});
+        }
+        const posts = await Post.find({postedBy: user._id}).sort({createdAt: -1});
+        res.status(200).json(posts);
+
+    }catch(error){
+        res.status(500).json({error: error.message});
+        console.log("Error in getUserPosts", error.message);
+    }
+}
+
+export {signupUser, loginUser, logoutUser, followUnfollowUser, updateUser, getUserProfile, getUserPosts};

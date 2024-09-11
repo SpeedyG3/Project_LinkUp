@@ -58,6 +58,11 @@ const deletePost = async(req, res) => {
             return res.status(404).json({error: "Post not found"});
         }
 
+        if(post.img){
+            const imgId = post.img.split("/").pop().split(".")[0];
+            await cloudinary.uploader.destroy(imgId);
+        }
+
         if(post.postedBy.toString() !== req.user._id.toString()){
             return res.status(401).json({error: "Unauthorized to delete Post"});
         }
@@ -131,7 +136,7 @@ const getFeedPosts = async(req, res) => {
 
         const following = user.following;
         const feedPosts = await Post.find({postedBy: {$in: following}}).sort({createdAt: 1});
-        res.status(200).json({feedPosts});
+        res.status(200).json(feedPosts);
         
     }catch(err){
         res.status(500).json({error: err.message});

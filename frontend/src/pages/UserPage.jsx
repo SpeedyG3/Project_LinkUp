@@ -1,15 +1,17 @@
 import { useParams } from "react-router-dom";
 import UserHeader from "../components/UserHeader";
-import UserPost from "../components/UserPost";
 import { useEffect, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import { Flex, Spinner } from "@chakra-ui/react";
+import Post from "../components/Post";
 
 const UserPage = () => {
   const [user, setUser] = useState(null);
   const {username} = useParams();
   const toast = useShowToast();
   const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
+  const [fetchingPosts, setFetchingPosts] = useState(true);
 
   useEffect(() => {
     const getUser = async() => {
@@ -27,7 +29,24 @@ const UserPage = () => {
         setLoading(false);
       }
     };
+
+    const getPosts = async() => {
+      setFetchingPosts(true);
+      try{
+        const res = await fetch(`/api/posts/user/${username}`);
+        const data = await res.json();
+        console.log(data);
+        setPosts(data);
+      }catch(error){
+        toast("Error", error.message, "error");
+        setPosts([]);
+      }finally{
+        setFetchingPosts(false);
+      }
+    };
+
     getUser();
+    getPosts();
   }, [username, toast]);
 
   if(!user && loading){
@@ -41,10 +60,16 @@ const UserPage = () => {
 
   return (<>
     <UserHeader user={user}/>
-    <UserPost likes={1200} replies={731} postImg="/post1.png" postTitle="lets talk about threads" />
-    <UserPost likes={290} replies={631} postImg="/post2.png" postTitle="Nice tutorial" />
-    <UserPost likes={598} replies={423} postImg="/post3.png" postTitle="I love this guy" />
-    <UserPost likes={773} replies={712} postTitle="My first thread" />
+    {!fetchingPosts && posts.length===0 && <h1> User hasn't posted! </h1>}
+    {fetchingPosts && (
+      <Flex justifyContent={"center"} my={12}>
+        <Spinner size={"xl"} />
+      </Flex>
+    )}
+
+    {posts.map((post) => (
+      <Post key={post._id} post={post} postedBy={post.postedBy}/>
+    ))}
   </>);
 }
 
