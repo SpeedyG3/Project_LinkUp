@@ -103,7 +103,7 @@ const replyPost = async(req, res) => {
         const {text} = req.body;
         const postId = req.params.postId;
         const userId = req.user._id;
-        const userProfilePic = req.user.userProfilePic;
+        const userProfilePic = req.user.profilePic;
         const username = req.user.username;
 
         if(!text){

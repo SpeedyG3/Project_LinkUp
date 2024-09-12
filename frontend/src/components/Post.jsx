@@ -35,6 +35,11 @@ const Post = ({ post, postedBy }) => {
         getUser();
     }, [postedBy, toast]);
 
+    useEffect(() => {
+        console.log(post);
+    }, [post]);
+    
+
     const handleDeletePost = async (e) => {
         try {
             e.preventDefault();
