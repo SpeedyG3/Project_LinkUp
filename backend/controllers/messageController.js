@@ -74,6 +74,13 @@ async function getConversations(req, res){
         }).populate({path: "participants", select: "username profilePic"})
         .sort({"updatedAt": -1});
 
+        //remove current user from participants and then send
+        conversations.forEach(conversation => {
+            conversation.participants = conversation.participants.filter(
+                participant => participant._id.toString() !== userId.toString()
+            );
+        });
+
         res.status(200).json(conversations);
     }catch(err){
         res.status(500).json({err: err.message});

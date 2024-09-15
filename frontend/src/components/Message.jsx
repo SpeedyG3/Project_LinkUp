@@ -1,6 +1,12 @@
 import { Avatar, Flex, Text } from '@chakra-ui/react'
+import { useRecoilValue } from 'recoil'
+import { selectedConversationAtom } from '../atoms/messagesAtom'
+import userAtom from '../atoms/userAtom';
 
-const Message = ({ ownMessage }) => {
+const Message = ({ ownMessage, message}) => {
+    const selectedConversation = useRecoilValue(selectedConversationAtom);
+    const user = useRecoilValue(userAtom);
+
     return (
         <>
             {ownMessage ? (
@@ -10,22 +16,20 @@ const Message = ({ ownMessage }) => {
                         bg={"blue.400"}
                         p={1} borderRadius={"md"}
                     >
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam dolores voluptates debitis nobis. Nam dicta hic, non dolore odio iure, quia culpa, consequatur veritatis magni eligendi totam numquam? Reiciendis, eius.
-                        Officiis dolor voluptates accusantium neque a vero aspernatur ratione possimus asperiores nam aliquid laboriosam eum, perferendis inventore alias autem ab nihil at aperiam eligendi voluptatem velit sapiente temporibus magnam? Harum!
+                        {message.text}
                     </Text>
-                    <Avatar src='' w={"7"}
+                    <Avatar src={user.profilePic} w={"7"}
                         h={"7"} />
                 </Flex>)
                 : (
                     <Flex gap={2}>
-                        <Avatar src='' w={"7"}
+                        <Avatar src={selectedConversation.userProfilePic} w={"7"}
                             h={"7"} />
                         <Text maxW={"350px"}
                             bg={"gray.400"}
                             p={1} borderRadius={"md"}
                         color={"black"}>
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam dolores voluptates debitis nobis. Nam dicta hic, non dolore odio iure, quia culpa, consequatur veritatis magni eligendi totam numquam? Reiciendis, eius.
-                            Officiis dolor voluptates accusantium neque a vero aspernatur ratione possimus asperiores nam aliquid laboriosam eum, perferendis inventore alias autem ab nihil at aperiam eligendi voluptatem velit sapiente temporibus magnam? Harum!
+                            {message.text}
                         </Text>
 
                     </Flex>

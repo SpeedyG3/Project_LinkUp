@@ -1,11 +1,40 @@
 import { SearchIcon } from '@chakra-ui/icons'
 import { Box, Button, Flex, Input, Skeleton, SkeletonCircle, Text, useColorModeValue } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Conversation from '../components/Conversation'
 import { GiConversation } from 'react-icons/gi'
 import MessageContainer from '../components/MessageContainer'
+import useShowToast from '../hooks/useShowToast'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { conversationsAtom, selectedConversationAtom } from '../atoms/messagesAtom'
 
 const ChatPage = () => {
+    const toast = useShowToast();
+    const [loadingConversations, setLoadingConversations] = useState(true);
+    const [conversations, setConversations] = useRecoilState(conversationsAtom);
+    const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
+
+    useEffect(() => {
+        const getConversations = async() => {
+            try{
+                const res = await fetch("/api/messages/conversations");
+                const data = await res.json();
+                
+                if(data.error){
+                    toast("Error", data.error, "error");
+                    return;
+                }
+                console.log(data);
+                setConversations(data);
+            }catch(error){
+                toast("Error", error.message, "error");
+            }finally{
+                setLoadingConversations(false);
+            }
+        }
+        getConversations();
+    }, [toast, setConversations]);
+
     return <Box
         position={"absolute"} left={"50%"}
         w={{ base: "100%", md: "80%", lg: "750px" }}
@@ -30,7 +59,7 @@ const ChatPage = () => {
                         </Button>
                     </Flex>
                 </form>
-                {false && (
+                {loadingConversations && (
                     [0, 1, 2, 3, 4].map((_, i) => (
                         <Flex key={i} gap={4} alignItems={"center"}
                         p={"1"} borderRadius={"md"}>
@@ -45,23 +74,31 @@ const ChatPage = () => {
                     ))
                 )}
 
-                <Conversation />
-                <Conversation />
-                <Conversation />
-                <Conversation />
+                {!loadingConversations && (
+                    conversations.map(conversation => (
+                        <Conversation key={conversation._id} conversation={conversation}/>
+                    ))
+                )}
+
+                
             </Flex>
-            {/* <Flex flex={70}
-            borderRadius={"md"}
-            p={2} flexDirection={"column"}
-            alignItems={"center"} 
-            justifyContent={"center"}
-            height={"400px"}>
-                <GiConversation size={100} />
-                <Text fontSize={20}>
-                    Select a conversation to start chatting!
-                </Text>
-            </Flex> */}
-            <MessageContainer />
+            {!selectedConversation._id && (
+                <Flex flex={70}
+                borderRadius={"md"}
+                p={2} flexDirection={"column"}
+                alignItems={"center"} 
+                justifyContent={"center"}
+                height={"400px"}>
+                    <GiConversation size={100} />
+                    <Text fontSize={20}>
+                        Select a conversation to start chatting!
+                    </Text>
+                </Flex>
+            )}
+            
+            {selectedConversation._id && (
+                <MessageContainer />
+            )}
         </Flex>
     </Box>
 }
