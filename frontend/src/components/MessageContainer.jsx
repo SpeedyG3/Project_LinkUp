@@ -14,11 +14,16 @@ const MessageContainer = () => {
     const [messages, setMessages] = useState([]);
     const currUser = useRecoilValue(userAtom);
 
+    console.log("selectedConversation", selectedConversation);
     useEffect(() => {
         const getMessages = async() => {
             setLoadingMessages(true);
             setMessages([]);
             try{
+                if(selectedConversation.mock){
+                    return;
+                }
+
                 const res = await fetch(`api/messages/${selectedConversation.userId}`);
                 const data = await res.json();
                 
@@ -86,7 +91,7 @@ const MessageContainer = () => {
                 
             </Flex>
 
-            <MessageInput />
+            <MessageInput setMessages={setMessages}/>
         </Flex>
     )
 }
